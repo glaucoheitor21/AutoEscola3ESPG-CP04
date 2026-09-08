@@ -11,8 +11,8 @@
 	<groupId>br.com.fiap3espg</groupId>
 	<artifactId>AutoEscola3ESPG</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>AutoEscola3ESPG</name>
+	<description>API ReST para agendamento de instrucoes de uma auto-escola</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -53,6 +53,12 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.6.0</version>
 		</dependency>
 
 		<dependency>
@@ -103,6 +109,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
