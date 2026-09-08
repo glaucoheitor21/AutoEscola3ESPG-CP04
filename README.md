@@ -52,6 +52,16 @@ usuários (o endpoint de cadastro é restrito a ADMIN):
 | --- | --- | --- |
 | `admin` | `admin` | ADMIN |
 
+## Collection do Insomnia
+
+O arquivo [`docs/insomnia-autoescola3espg.json`](docs/insomnia-autoescola3espg.json)
+traz todas as requisições da API já prontas, organizadas em seis pastas —
+incluindo uma pasta só com os casos de erro que demonstram cada regra de negócio.
+
+Para importar: **Insomnia → Import → From File** e selecione o arquivo. Depois
+rode `Login ADMIN`, copie o `tokenJWT` da resposta e cole na variável `token` do
+Environment (`Ctrl+E`).
+
 ## Autenticação
 
 Todos os endpoints exigem um token JWT, exceto `POST /login` e `GET /health-check`.
