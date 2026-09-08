@@ -1,7 +1,5 @@
 package br.com.fiap3espg.autoescola3espg.domain.instrucao;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -14,6 +12,4 @@ public interface InstrucaoRepository extends JpaRepository<Instrucao, Long> {
 
     long countByAlunoIdAndDataHoraBetweenAndMotivoCancelamentoIsNull(
             Long idAluno, LocalDateTime inicioDoDia, LocalDateTime fimDoDia);
-
-    Page<Instrucao> findAllByMotivoCancelamentoIsNull(Pageable paginacao);
 }
