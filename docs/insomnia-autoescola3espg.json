@@ -9,7 +9,7 @@
       "_type": "workspace",
       "parentId": null,
       "name": "Auto-Escola 3ESPG - CP04",
-      "description": "API ReST de agendamento de instrucoes. Comece pela pasta '1 - Login': rode 'Login ADMIN', copie o valor de tokenJWT da resposta e cole na variavel 'token' do Environment (atalho Ctrl+E).",
+      "description": "API ReST de agendamento de instrucoes.\n\nSETUP (obrigatorio no modo Scratch Pad, quando nao ha conta no Insomnia):\no import descarta o environment do arquivo, entao aperte Ctrl+E e cole:\n{ \"token\": \"\", \"token_user\": \"\" }\n\nDepois rode '1 - Login > POST Login ADMIN', copie o tokenJWT da resposta e cole em 'token'. Repita com 'POST Login USER pedro' para 'token_user'.",
       "scope": "collection"
     },
     {
@@ -18,14 +18,14 @@
       "parentId": "wrk_autoescola",
       "name": "Base Environment",
       "data": {
-        "base_url": "http://localhost:8085",
         "token": "COLE_AQUI_O_TOKEN_DO_ADMIN",
-        "token_user": "COLE_AQUI_O_TOKEN_DO_USUARIO_COMUM",
-        "data_futura": "15/12/2026 - 10:00",
-        "data_futura_2": "15/12/2026 - 14:00"
+        "token_user": "COLE_AQUI_O_TOKEN_DO_USUARIO_COMUM"
       },
       "dataPropertyOrder": {
-        "&": ["base_url", "token", "token_user", "data_futura", "data_futura_2"]
+        "&": [
+          "token",
+          "token_user"
+        ]
       },
       "metaSortKey": 1,
       "isPrivate": false
@@ -44,7 +44,7 @@
       "parentId": "fld_login",
       "name": "GET Health Check (publico)",
       "method": "GET",
-      "url": "{{ _.base_url }}/health-check",
+      "url": "http://localhost:8085/health-check",
       "body": {},
       "headers": [],
       "authentication": {},
@@ -57,13 +57,16 @@
       "name": "POST Login ADMIN -> 200",
       "description": "Copie o tokenJWT da resposta e cole na variavel 'token' do Environment (Ctrl+E).",
       "method": "POST",
-      "url": "{{ _.base_url }}/login",
+      "url": "http://localhost:8085/login",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"login\": \"admin\",\n  \"senha\": \"admin\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
       "authentication": {},
       "metaSortKey": -99
@@ -75,13 +78,16 @@
       "name": "POST Login USER pedro -> 200",
       "description": "Rode primeiro 'POST Cadastrar usuario'. Copie o tokenJWT para a variavel 'token_user'.",
       "method": "POST",
-      "url": "{{ _.base_url }}/login",
+      "url": "http://localhost:8085/login",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"login\": \"pedro\",\n  \"senha\": \"senha123\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
       "authentication": {},
       "metaSortKey": -98
@@ -92,13 +98,16 @@
       "parentId": "fld_login",
       "name": "POST Login senha errada -> 401",
       "method": "POST",
-      "url": "{{ _.base_url }}/login",
+      "url": "http://localhost:8085/login",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"login\": \"admin\",\n  \"senha\": \"senha_errada\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
       "authentication": {},
       "metaSortKey": -97
@@ -118,15 +127,21 @@
       "name": "POST Cadastrar usuario -> 201",
       "description": "A senha e gravada apenas como hash BCrypt e nunca volta na resposta.",
       "method": "POST",
-      "url": "{{ _.base_url }}/usuarios",
+      "url": "http://localhost:8085/usuarios",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"login\": \"pedro\",\n  \"senha\": \"senha123\",\n  \"perfil\": \"USER\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -90
     },
     {
@@ -136,10 +151,13 @@
       "name": "GET Listar usuarios -> 200",
       "description": "Paginada, 10 por pagina, ordenada por login. A senha nunca aparece.",
       "method": "GET",
-      "url": "{{ _.base_url }}/usuarios",
+      "url": "http://localhost:8085/usuarios",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -89
     },
     {
@@ -148,10 +166,13 @@
       "parentId": "fld_usuarios",
       "name": "GET Detalhar usuario 1 -> 200",
       "method": "GET",
-      "url": "{{ _.base_url }}/usuarios/1",
+      "url": "http://localhost:8085/usuarios/1",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -88
     },
     {
@@ -161,15 +182,21 @@
       "name": "PUT Atualizar perfil do usuario -> 200",
       "description": "Promove o usuario 2 a ADMIN.",
       "method": "PUT",
-      "url": "{{ _.base_url }}/usuarios",
+      "url": "http://localhost:8085/usuarios",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id\": 2,\n  \"perfil\": \"ADMIN\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -87
     },
     {
@@ -179,15 +206,21 @@
       "name": "PUT Alterar a PROPRIA senha -> 204",
       "description": "Usa o token do usuario comum. Exige a senha atual como confirmacao. Depois disso, o login com 'senha123' passa a dar 401.",
       "method": "PUT",
-      "url": "{{ _.base_url }}/usuarios/senha",
+      "url": "http://localhost:8085/usuarios/senha",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"senhaAtual\": \"senha123\",\n  \"novaSenha\": \"novaSenha456\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token_user }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_user }}"
+      },
       "metaSortKey": -86
     },
     {
@@ -196,15 +229,21 @@
       "parentId": "fld_usuarios",
       "name": "PUT Alterar senha com senha atual errada -> 400",
       "method": "PUT",
-      "url": "{{ _.base_url }}/usuarios/senha",
+      "url": "http://localhost:8085/usuarios/senha",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"senhaAtual\": \"chute_errado\",\n  \"novaSenha\": \"novaSenha456\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token_user }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_user }}"
+      },
       "metaSortKey": -85
     },
     {
@@ -213,10 +252,13 @@
       "parentId": "fld_usuarios",
       "name": "DELETE Excluir usuario 2 -> 204",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/usuarios/2",
+      "url": "http://localhost:8085/usuarios/2",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -84
     },
     {
@@ -226,10 +268,13 @@
       "name": "DELETE Excluir a PROPRIA conta -> 400",
       "description": "Protecao para o admin nao se trancar fora do sistema.",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/usuarios/1",
+      "url": "http://localhost:8085/usuarios/1",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -83
     },
     {
@@ -245,15 +290,21 @@
       "parentId": "fld_instrutores",
       "name": "POST Cadastrar instrutor -> 201",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrutores",
+      "url": "http://localhost:8085/instrutores",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"nome\": \"Carlos Lima\",\n  \"email\": \"carlos@email.com\",\n  \"telefone\": \"11988887777\",\n  \"cnh\": \"12345678901\",\n  \"especialidade\": \"CARROS\",\n  \"endereco\": {\n    \"logradouro\": \"Rua B\",\n    \"numero\": \"20\",\n    \"bairro\": \"Vila\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"02002-000\"\n  }\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -80
     },
     {
@@ -263,15 +314,21 @@
       "name": "POST Cadastrar 2o instrutor CARROS -> 201",
       "description": "Util para demonstrar o sorteio automatico de instrutor.",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrutores",
+      "url": "http://localhost:8085/instrutores",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"nome\": \"Beatriz Alves\",\n  \"email\": \"beatriz@email.com\",\n  \"telefone\": \"11955554444\",\n  \"cnh\": \"98765432100\",\n  \"especialidade\": \"CARROS\",\n  \"endereco\": {\n    \"logradouro\": \"Av C\",\n    \"numero\": \"300\",\n    \"bairro\": \"Jardim\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"04004-000\"\n  }\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -79
     },
     {
@@ -281,10 +338,13 @@
       "name": "GET Listar instrutores -> 200",
       "description": "Paginada, 10 por pagina, ordenada por nome. Instrutores inativos nao aparecem.",
       "method": "GET",
-      "url": "{{ _.base_url }}/instrutores",
+      "url": "http://localhost:8085/instrutores",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -78
     },
     {
@@ -293,10 +353,13 @@
       "parentId": "fld_instrutores",
       "name": "GET Detalhar instrutor 1 -> 200",
       "method": "GET",
-      "url": "{{ _.base_url }}/instrutores/1",
+      "url": "http://localhost:8085/instrutores/1",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -77
     },
     {
@@ -306,15 +369,21 @@
       "name": "PUT Atualizar instrutor -> 200",
       "description": "Somente nome, telefone e endereco. E-mail, CNH e especialidade sao imutaveis por regra de negocio.",
       "method": "PUT",
-      "url": "{{ _.base_url }}/instrutores",
+      "url": "http://localhost:8085/instrutores",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id\": 1,\n  \"nome\": \"Carlos Lima Junior\",\n  \"telefone\": \"11911112222\",\n  \"endereco\": {\n    \"logradouro\": \"Rua Nova\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"05005-000\"\n  }\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -76
     },
     {
@@ -324,10 +393,13 @@
       "name": "DELETE Excluir instrutor 1 (logica) -> 204",
       "description": "Nao apaga: marca como inativo. Confirme rodando a listagem depois.",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/instrutores/1",
+      "url": "http://localhost:8085/instrutores/1",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -75
     },
     {
@@ -344,15 +416,21 @@
       "parentId": "fld_alunos",
       "name": "POST Cadastrar aluno -> 201",
       "method": "POST",
-      "url": "{{ _.base_url }}/alunos",
+      "url": "http://localhost:8085/alunos",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"nome\": \"Ana Souza\",\n  \"email\": \"ana@email.com\",\n  \"telefone\": \"11999990000\",\n  \"cpf\": \"12345678901\",\n  \"endereco\": {\n    \"logradouro\": \"Rua A\",\n    \"numero\": \"10\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"01001-000\"\n  }\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -70
     },
     {
@@ -362,10 +440,13 @@
       "name": "GET Listar alunos -> 200",
       "description": "Paginada, 10 por pagina, ordenada por nome. Alunos inativos nao aparecem.",
       "method": "GET",
-      "url": "{{ _.base_url }}/alunos",
+      "url": "http://localhost:8085/alunos",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -69
     },
     {
@@ -374,10 +455,13 @@
       "parentId": "fld_alunos",
       "name": "GET Detalhar aluno 1 -> 200",
       "method": "GET",
-      "url": "{{ _.base_url }}/alunos/1",
+      "url": "http://localhost:8085/alunos/1",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -68
     },
     {
@@ -387,15 +471,21 @@
       "name": "PUT Atualizar aluno -> 200",
       "description": "Somente nome, telefone e endereco. E-mail e CPF sao imutaveis por regra de negocio.",
       "method": "PUT",
-      "url": "{{ _.base_url }}/alunos",
+      "url": "http://localhost:8085/alunos",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id\": 1,\n  \"nome\": \"Ana Souza Silva\",\n  \"telefone\": \"11777776666\",\n  \"endereco\": {\n    \"logradouro\": \"Rua Nova\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"03003-000\"\n  }\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -67
     },
     {
@@ -405,10 +495,13 @@
       "name": "DELETE Excluir aluno 1 (logica) -> 204",
       "description": "Nao apaga: marca como inativo. Confirme rodando a listagem depois.",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/alunos/1",
+      "url": "http://localhost:8085/alunos/1",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -66
     },
     {
@@ -416,7 +509,7 @@
       "_type": "request_group",
       "parentId": "wrk_autoescola",
       "name": "5 - Instrucoes (agendamento e cancelamento)",
-      "description": "As datas ficam nas variaveis 'data_futura' e 'data_futura_2' do Environment. Ajuste para uma data futura, de segunda a sabado, entre 06:00 e 20:00, em hora cheia.",
+      "description": "As datas estao fixas em 15/12/2026 (uma terca-feira). Se essa data ja tiver passado, edite no corpo da requisicao: precisa ser futura, de segunda a sabado, entre 06:00 e 20:00 e em hora cheia.",
       "metaSortKey": -60
     },
     {
@@ -425,15 +518,21 @@
       "parentId": "fld_instrucoes",
       "name": "POST Agendar com instrutor definido -> 200",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"{{ _.data_futura }}\"\n}"
+        "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"15/12/2026 - 10:00\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -60
     },
     {
@@ -443,15 +542,21 @@
       "name": "POST Agendar SEM instrutor (sorteio) -> 200",
       "description": "Instrutor e opcional: o sistema sorteia aleatoriamente um instrutor ativo e livre no horario, dentro da especialidade.",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"id_aluno\": 1,\n  \"especialidade\": \"CARROS\",\n  \"data_hora\": \"{{ _.data_futura_2 }}\"\n}"
+        "text": "{\n  \"id_aluno\": 1,\n  \"especialidade\": \"CARROS\",\n  \"data_hora\": \"15/12/2026 - 14:00\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -59
     },
     {
@@ -461,15 +566,21 @@
       "name": "DELETE Cancelar instrucao -> 200",
       "description": "Motivos aceitos: ALUNO_DESISTIU, INSTRUTOR_CANCELOU, OUTROS. Exige 24h de antecedencia. Nao apaga a instrucao: grava o motivo e a data, e libera o horario do instrutor.",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_instrucao\": 1,\n  \"motivo_cancelamento\": \"ALUNO_DESISTIU\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -58
     },
     {
@@ -486,7 +597,7 @@
       "parentId": "fld_regras",
       "name": "GET Sem token -> 403",
       "method": "GET",
-      "url": "{{ _.base_url }}/alunos",
+      "url": "http://localhost:8085/alunos",
       "body": {},
       "headers": [],
       "authentication": {},
@@ -499,10 +610,13 @@
       "name": "GET USER tenta listar usuarios -> 403",
       "description": "Apenas ADMIN pode gerenciar usuarios.",
       "method": "GET",
-      "url": "{{ _.base_url }}/usuarios",
+      "url": "http://localhost:8085/usuarios",
       "body": {},
       "headers": [],
-      "authentication": { "type": "bearer", "token": "{{ _.token_user }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_user }}"
+      },
       "metaSortKey": -49
     },
     {
@@ -511,15 +625,21 @@
       "parentId": "fld_regras",
       "name": "POST USER tenta cadastrar usuario -> 403",
       "method": "POST",
-      "url": "{{ _.base_url }}/usuarios",
+      "url": "http://localhost:8085/usuarios",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"login\": \"invasor\",\n  \"senha\": \"1234\",\n  \"perfil\": \"ADMIN\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token_user }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token_user }}"
+      },
       "metaSortKey": -48
     },
     {
@@ -529,15 +649,21 @@
       "name": "POST Aluno com dados invalidos -> 400",
       "description": "Nome vazio, e-mail malformado, CPF curto, UF minuscula e CEP sem hifen. A resposta lista campo a campo.",
       "method": "POST",
-      "url": "{{ _.base_url }}/alunos",
+      "url": "http://localhost:8085/alunos",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"nome\": \"\",\n  \"email\": \"nao-eh-email\",\n  \"telefone\": \"11999990000\",\n  \"cpf\": \"123\",\n  \"endereco\": {\n    \"logradouro\": \"Rua A\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"Sao Paulo\",\n    \"uf\": \"sp\",\n    \"cep\": \"01001000\"\n  }\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -47
     },
     {
@@ -547,15 +673,21 @@
       "name": "POST Agendar as 22:00 -> 400",
       "description": "Fora do horario de funcionamento (06:00 as 21:00, com inicio maximo as 20:00).",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"15/12/2026 - 22:00\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -46
     },
     {
@@ -565,15 +697,21 @@
       "name": "POST Agendar as 10:30 -> 400",
       "description": "Instrucoes duram 1 hora fixa, logo so comecam em horas cheias.",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"15/12/2026 - 10:30\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -45
     },
     {
@@ -583,15 +721,21 @@
       "name": "POST Agendar num domingo -> 400",
       "description": "13/12/2026 e um domingo. Funcionamento e de segunda a sabado.",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"13/12/2026 - 10:00\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -44
     },
     {
@@ -601,15 +745,21 @@
       "name": "POST Instrutor ocupado no mesmo horario -> 400",
       "description": "Rode depois de 'POST Agendar com instrutor definido'.",
       "method": "POST",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
-        "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"{{ _.data_futura }}\"\n}"
+        "text": "{\n  \"id_aluno\": 1,\n  \"id_instrutor\": 1,\n  \"data_hora\": \"15/12/2026 - 10:00\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -43
     },
     {
@@ -618,15 +768,21 @@
       "parentId": "fld_regras",
       "name": "DELETE Cancelar com motivo invalido -> 400",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_instrucao\": 1,\n  \"motivo_cancelamento\": \"NAO_QUIS_MAIS\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -42
     },
     {
@@ -636,15 +792,21 @@
       "name": "DELETE Cancelar sem motivo -> 400",
       "description": "O motivo do cancelamento e obrigatorio.",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_instrucao\": 1\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -41
     },
     {
@@ -654,15 +816,21 @@
       "name": "DELETE Cancelar com menos de 24h -> 400",
       "description": "Agende uma instrucao para amanha e coloque o id dela aqui. O cancelamento exige 24h de antecedencia.",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_instrucao\": 2,\n  \"motivo_cancelamento\": \"INSTRUTOR_CANCELOU\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -40
     },
     {
@@ -671,15 +839,21 @@
       "parentId": "fld_regras",
       "name": "DELETE Cancelar instrucao inexistente -> 404",
       "method": "DELETE",
-      "url": "{{ _.base_url }}/instrucoes",
+      "url": "http://localhost:8085/instrucoes",
       "body": {
         "mimeType": "application/json",
         "text": "{\n  \"id_instrucao\": 9999,\n  \"motivo_cancelamento\": \"OUTROS\"\n}"
       },
       "headers": [
-        { "name": "Content-Type", "value": "application/json" }
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
       ],
-      "authentication": { "type": "bearer", "token": "{{ _.token }}" },
+      "authentication": {
+        "type": "bearer",
+        "token": "{{ _.token }}"
+      },
       "metaSortKey": -39
     }
   ]

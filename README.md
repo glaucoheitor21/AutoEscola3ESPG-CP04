@@ -58,9 +58,31 @@ O arquivo [`docs/insomnia-autoescola3espg.json`](docs/insomnia-autoescola3espg.j
 traz todas as requisições da API já prontas, organizadas em seis pastas —
 incluindo uma pasta só com os casos de erro que demonstram cada regra de negócio.
 
-Para importar: **Insomnia → Import → From File** e selecione o arquivo. Depois
-rode `Login ADMIN`, copie o `tokenJWT` da resposta e cole na variável `token` do
-Environment (`Ctrl+E`).
+Para importar: **Insomnia → Import → From File** e selecione o arquivo.
+
+> **Atenção no modo Scratch Pad** (Insomnia sem conta): a importação traz as
+> requisições e as pastas, mas **descarta o environment** do arquivo, porque o
+> Scratch Pad usa um workspace fixo e próprio. As requisições ficam então
+> apontando para variáveis que não existem, e o Insomnia acusa
+> `environment variable is missing`.
+>
+> A correção leva alguns segundos: aperte `Ctrl+E`, selecione **Base
+> Environment** e cole:
+>
+> ```json
+> {
+>   "token": "",
+>   "token_user": ""
+> }
+> ```
+
+Em seguida rode `1 - Login → POST Login ADMIN`, copie o `tokenJWT` da resposta e
+cole na variável `token`. Para os testes de permissão, cadastre o usuário comum
+(`2 - Usuarios → POST Cadastrar usuario`), rode `POST Login USER pedro` e cole
+esse token em `token_user`.
+
+As URLs estão fixas em `http://localhost:8085` e as datas das instruções em
+`15/12/2026`, justamente para não dependerem de variáveis de ambiente.
 
 ## Autenticação
 
